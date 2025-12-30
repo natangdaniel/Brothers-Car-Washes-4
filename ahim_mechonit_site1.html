@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>האחים מכונית בע"מ 🚗💦🧽</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {margin:0;font-family:Arial;background:#f2f2f2;color:#222;}
+    header {padding:60px 20px;text-align:center;background:#0a74da;color:white;position:relative;}
+    .team-note {position:absolute;left:20px;top:20px;font-weight:bold;}
+    section {background:white;max-width:900px;margin:20px auto;padding:20px;border-radius:12px;}
+    h2 {color:#0a74da;}
+    .rating-box {position:fixed;right:20px;top:140px;width:230px;background:white;padding:12px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+    .stars span {font-size:22px;cursor:pointer;filter:grayscale(100%);}
+    .stars span.active {filter:none;}
+    .review {border-bottom:1px solid #eee;padding:8px 0;}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="team-note">👥 אנחנו 4 אנשים בעסק</div>
+  <h1>האחים מכונית בע"מ 🚗💦🧽</h1>
+  <p style="color:black;font-weight:bold;">(יהיו ימי שישי שלא תתקיים שטיפה בשל סיבות פרטיות – אנא הבינו זאת)</p>
+</header>
+
+<div class="rating-box">
+  <h3>דרגו אותנו ⭐</h3>
+  <div class="stars" id="stars">
+    <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+  </div>
+  <input id="reviewName" placeholder="השם שלכם" style="width:100%;margin-top:5px">
+  <textarea id="feedback" placeholder="משוב קצר" style="width:100%;margin-top:5px"></textarea>
+  <button onclick="sendFeedback()" style="width:100%;margin-top:5px">שלח</button>
+  <h3>חוות דעת</h3>
+  <div id="reviews"></div>
+</div>
+
+<section>
+  <h2>מחירים</h2>
+  <ul>
+    <li>🚗 פנים + חוץ – 60 ₪</li>
+    <li>🚿 חוץ בלבד – 25 ₪</li>
+    <li>🧼 פנים בלבד – 35 ₪</li>
+  </ul>
+</section>
+
+<section>
+  <h2>זמן שטיפה</h2>
+  <ul>
+    <li>פנים + חוץ: 30–35 דקות</li>
+    <li>חוץ בלבד: 15–20 דקות</li>
+    <li>פנים בלבד: 20–25 דקות</li>
+  </ul>
+</section>
+
+<script>
+let rating=0;
+document.querySelectorAll('#stars span').forEach((s,i)=>{
+  s.onclick=()=>{
+    rating=i+1;
+    document.querySelectorAll('#stars span').forEach((x,j)=>x.classList.toggle('active',j<=i));
+  }
+});
+function sendFeedback(){
+  if(!rating){alert('בחר כוכבים');return;}
+  const name=reviewName.value||'אנונימי';
+  const text=feedback.value||'—';
+  const arr=JSON.parse(localStorage.getItem('reviews')||'[]');
+  arr.push({name,rating,text});
+  localStorage.setItem('reviews',JSON.stringify(arr));
+  reviewName.value='';feedback.value='';rating=0;
+  document.querySelectorAll('#stars span').forEach(x=>x.classList.remove('active'));
+  load();
+}
+function load(){
+  reviews.innerHTML='';
+  (JSON.parse(localStorage.getItem('reviews')||'[]')).forEach(r=>{
+    reviews.innerHTML+=`<div class="review"><b>${r.name}</b><br>${'⭐'.repeat(r.rating)}<br>${r.text}</div>`;
+  });
+}
+load();
+</script>
+
+</body>
+</html>
